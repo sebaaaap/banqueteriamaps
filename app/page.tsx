@@ -1,65 +1,112 @@
 import Image from "next/image";
+import Link from "next/link";
+import { client, urlFor } from "@/lib/sanity";
+import { Download, MessageSquare } from "lucide-react";
+import HeroCarousel from "@/components/HeroCarousel";
+import AgendaSection from "@/components/AgendaSection";
+import FeaturedProducts from "@/components/FeaturedProducts";
+import ConfigSetter from "@/components/ConfigSetter";
+import ProcessSection from "@/components/ProcessSection";
+import ServicesGrid from "@/components/ServicesGrid";
+import BrandsCarousel from "@/components/BrandsCarousel";
+import AboutSection from "@/components/AboutSection";
 
-export default function Home() {
+// Interfaces
+interface Servicio {
+  _id: string;
+  titulo: string;
+  descripcion: string;
+  imagenPrincipal: any;
+  pdfMenu?: string; // URL string from projection
+}
+
+interface Evento {
+  _id: string;
+  titulo: string;
+  imagen: any;
+}
+
+interface Configuracion {
+  whatsapp: string;
+  email: string;
+  instagram: string;
+}
+
+// Data fetching
+async function getData() {
+  const servicesQuery = `*[_type == "servicio"]{
+    _id,
+    titulo,
+    descripcion,
+    imagenPrincipal,
+    "pdfMenu": pdfMenu.asset->url
+  }`;
+
+  // Assuming 'evento' exists, otherwise returns empty or error. 
+  // If error, try-catch or just return empty for now to avoid crash.
+  const eventsQuery = `*[_type == "evento"]{
+    _id,
+    titulo,
+    imagen
+  }`;
+
+  const configQuery = `*[_type == "configuracion"][0]`;
+
+  try {
+    const [services, events, config] = await Promise.all([
+      client.fetch<Servicio[]>(servicesQuery),
+      client.fetch<Evento[]>(eventsQuery).catch(() => []),
+      client.fetch<Configuracion>(configQuery).catch(() => ({ whatsapp: "56900000000", email: "", instagram: "" })),
+    ]);
+    return { services, events, config };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return { services: [], events: [], config: null };
+  }
+}
+
+export default async function Home() {
+  const { services, events, config } = await getData();
+  const whatsappNumber = config?.whatsapp?.replace(/\D/g, "") || "56900000000";
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="flex flex-col min-h-screen">
+      {config && <ConfigSetter whatsapp={config.whatsapp} />}
+      {/* Hero Section & Agenda Section combined for initial view */}
+      <HeroCarousel />
+      <AgendaSection />
+      <FeaturedProducts products={services.slice(0, 4)} />
+      <ProcessSection />
+
+      {/* Services Section */}
+
+      <ServicesGrid />
+      <AboutSection />
+      <BrandsCarousel />
+
+
+
+      {/* CTA Section */}
+      <section id="contacto" className="py-24 bg-white text-brand-black text-center px-4 relative overflow-hidden scroll-mt-24">
+
+        <div className="relative z-10 max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-serif font-bold mb-8 leading-tight">
+            ¿Listo para llevar tu evento al siguiente nivel?
+          </h2>
+          <p className="text-brand-gray mb-12 text-lg md:text-xl max-w-2xl mx-auto font-light">
+            Cuéntanos tu idea y nosotros nos encargamos de convertirla en una experiencia gastronómica inolvidable.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
           <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            href={`https://wa.me/${whatsappNumber}`}
             target="_blank"
             rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 bg-brand-pink text-brand-white px-10 py-5 rounded-full font-bold text-lg hover:bg-brand-pink/90 transition-all hover:scale-105 shadow-xl"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
+            <MessageSquare size={24} />
+            Contactar por WhatsApp
           </a>
         </div>
-      </main>
+      </section>
     </div>
   );
 }
