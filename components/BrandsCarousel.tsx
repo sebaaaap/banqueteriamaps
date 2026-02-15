@@ -3,12 +3,12 @@
 import Image from "next/image";
 
 const brands = [
-    { name: "Empresa 1", logo: "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=200&h=100&fit=crop&auto=format" },
-    { name: "Empresa 2", logo: "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=200&h=100&fit=crop&auto=format" },
-    { name: "Empresa 3", logo: "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=200&h=100&fit=crop&auto=format" },
-    { name: "Empresa 4", logo: "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=200&h=100&fit=crop&auto=format" },
-    { name: "Empresa 5", logo: "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=200&h=100&fit=crop&auto=format" },
-    { name: "Empresa 6", logo: "https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=200&h=100&fit=crop&auto=format" },
+    { name: "Alaya", logo: "/empresas/alaya.png" },
+    { name: "Arcor", logo: "/empresas/arcor.png" },
+    { name: "Colgate", logo: "/empresas/colgate.png" },
+    { name: "Integramedica", logo: "/empresas/integramedica.png" },
+    { name: "Usach", logo: "/empresas/usach.png" },
+    { name: "Weg", logo: "/empresas/weg.png" },
 ];
 
 export default function BrandsCarousel() {
@@ -21,20 +21,29 @@ export default function BrandsCarousel() {
             </div>
 
             <div className="relative flex overflow-x-hidden group">
-                <div className="animate-marquee whitespace-nowrap flex gap-16 px-8">
+                <div className="animate-marquee whitespace-nowrap flex gap-12 px-8 items-center">
                     {/* Double the list for infinite scroll effect */}
                     {[...brands, ...brands, ...brands].map((brand, index) => (
-                        <div key={index} className="relative w-32 h-16 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-                            {/* Placeholder for actual logos */}
-                            <span className="text-xl font-bold text-gray-300">{brand.name}</span>
+                        <div key={index} className="relative w-40 h-20 opacity-100 hover:scale-110 transition-all duration-300 flex items-center justify-center shrink-0">
+                            <Image
+                                src={brand.logo}
+                                alt={brand.name}
+                                fill
+                                className="object-contain p-4"
+                            />
                         </div>
                     ))}
                 </div>
 
-                <div className="absolute top-0 animate-marquee2 whitespace-nowrap flex gap-16 px-8">
+                <div className="absolute top-0 animate-marquee2 whitespace-nowrap flex gap-12 px-8 items-center">
                     {[...brands, ...brands, ...brands].map((brand, index) => (
-                        <div key={`dup-${index}`} className="relative w-32 h-16 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-                            <span className="text-xl font-bold text-gray-300">{brand.name}</span>
+                        <div key={`dup-${index}`} className="relative w-40 h-20 opacity-100 hover:scale-110 transition-all duration-300 flex items-center justify-center shrink-0">
+                            <Image
+                                src={brand.logo}
+                                alt={brand.name}
+                                fill
+                                className="object-contain p-4"
+                            />
                         </div>
                     ))}
                 </div>

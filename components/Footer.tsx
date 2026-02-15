@@ -60,19 +60,26 @@ export default function Footer() {
                 <div>
                     <h4 className="font-serif font-bold mb-6 uppercase tracking-[0.2em] text-sm text-brand-gold">Contacto</h4>
                     <div className="space-y-4">
-                        <a href="mailto:contacto@banqueteriamaps.cl" className="flex items-center gap-4 group">
+                        <a href="mailto:banqueteriamaps@gmail.com" className="flex items-center gap-4 group">
                             <div className="p-2 rounded-full bg-white/5 group-hover:bg-brand-gold transition-colors">
                                 <Mail size={18} className="text-gray-300 group-hover:text-brand-black" />
                             </div>
-                            <span className="text-gray-400 group-hover:text-white transition-colors text-sm">contacto@banqueteriamaps.cl</span>
+                            <span className="text-gray-400 group-hover:text-white transition-colors text-sm">banqueteriamaps@gmail.com</span>
                         </a>
 
-                        <a href="tel:+56912345678" className="flex items-center gap-4 group">
+                        <a href="tel:+56976324033" className="flex items-center gap-4 group">
                             <div className="p-2 rounded-full bg-white/5 group-hover:bg-brand-gold transition-colors">
                                 <Phone size={18} className="text-gray-300 group-hover:text-brand-black" />
                             </div>
-                            <span className="text-gray-400 group-hover:text-white transition-colors text-sm">+56 9 1234 5678</span>
+                            <span className="text-gray-400 group-hover:text-white transition-colors text-sm">+56 9 7632 4033</span>
                         </a>
+
+                        <div className="flex items-center gap-4 pt-2">
+                            <div className="p-2 rounded-full bg-white/5">
+                                <span className="text-brand-gold text-xs font-bold font-serif">H</span>
+                            </div>
+                            <span className="text-gray-400 text-sm">9am a 20pm</span>
+                        </div>
 
                         <div className="mt-8 pt-6 border-t border-white/5">
                             <p className="text-[10px] text-gray-500 uppercase tracking-widest">

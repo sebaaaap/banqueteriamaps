@@ -56,7 +56,7 @@ async function getData() {
     const [services, events, config] = await Promise.all([
       client.fetch<Servicio[]>(servicesQuery),
       client.fetch<Evento[]>(eventsQuery).catch(() => []),
-      client.fetch<Configuracion>(configQuery).catch(() => ({ whatsapp: "56900000000", email: "", instagram: "" })),
+      client.fetch<Configuracion>(configQuery).catch(() => ({ whatsapp: "56976324033", email: "banqueteriamaps@gmail.com", instagram: "" })),
     ]);
     return { services, events, config };
   } catch (error) {
@@ -67,7 +67,7 @@ async function getData() {
 
 export default async function Home() {
   const { services, events, config } = await getData();
-  const whatsappNumber = config?.whatsapp?.replace(/\D/g, "") || "56900000000";
+  const whatsappNumber = config?.whatsapp?.replace(/\D/g, "") || "56976324033";
 
   return (
     <div className="flex flex-col min-h-screen">

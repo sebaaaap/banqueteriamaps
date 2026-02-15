@@ -12,16 +12,16 @@ interface Configuracion {
 async function getConfig() {
     const configQuery = `*[_type == "configuracion"][0]`;
     try {
-        return await client.fetch<Configuracion>(configQuery).catch(() => ({ whatsapp: "56900000000" }));
+        return await client.fetch<Configuracion>(configQuery).catch(() => ({ whatsapp: "56976324033" }));
     } catch (error) {
         console.error("Error fetching config:", error);
-        return { whatsapp: "56900000000" };
+        return { whatsapp: "56976324033" };
     }
 }
 
 export default async function ServiciosPage() {
     const config = await getConfig();
-    const whatsappNumber = config?.whatsapp?.replace(/\D/g, "") || "56900000000";
+    const whatsappNumber = config?.whatsapp?.replace(/\D/g, "") || "56976324033";
 
     const services = [
         {
@@ -103,7 +103,7 @@ export default async function ServiciosPage() {
 
     return (
         <div className="flex flex-col min-h-screen bg-brand-white">
-            <ConfigSetter whatsapp={config?.whatsapp || "56900000000"} />
+            <ConfigSetter whatsapp={config?.whatsapp || "56976324033"} />
 
             {/* Hero Section */}
             <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
