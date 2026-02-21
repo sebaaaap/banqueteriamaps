@@ -45,7 +45,7 @@ export default function AgendaSection({ hours = 48 }: AgendaSectionProps) {
             {/* Categories Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 flex-grow">
                 {categories.map((cat) => (
-                    <div key={cat.id} className="relative group overflow-hidden min-h-[250px] md:h-full">
+                    <Link href="/productos" key={cat.id} className="relative group overflow-hidden min-h-[250px] md:h-full block">
                         <Image
                             src={cat.image}
                             alt={cat.title}
@@ -60,14 +60,13 @@ export default function AgendaSection({ hours = 48 }: AgendaSectionProps) {
                             <h3 className="text-white font-serif text-lg md:text-2xl font-bold mb-4 drop-shadow-md tracking-wider uppercase">
                                 {cat.title}
                             </h3>
-                            <Link
-                                href={`#servicios`}
+                            <button
                                 className="bg-brand-pink text-white px-6 md:px-8 py-2 md:py-3 rounded-full text-xs md:text-sm font-bold hover:bg-white hover:text-brand-pink transition-all transform hover:scale-105 shadow-xl uppercase"
                             >
                                 Ver productos
-                            </Link>
+                            </button>
                         </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </section>

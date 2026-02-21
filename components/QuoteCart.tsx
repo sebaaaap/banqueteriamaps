@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { urlFor } from "@/lib/sanity";
 
-export default function QuoteCart() {
+export default function QuoteDrawer() {
     const { items, removeItem, updateQuantity, clearCart, whatsappNumber } = useQuoteStore();
     const [isOpen, setIsOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
@@ -14,6 +14,11 @@ export default function QuoteCart() {
     // Fix hydration issues with zustand persist
     useEffect(() => {
         setMounted(true);
+
+        // Listen for open event
+        const handleOpen = () => setIsOpen(true);
+        window.addEventListener('open-quote-drawer', handleOpen);
+        return () => window.removeEventListener('open-quote-drawer', handleOpen);
     }, []);
 
     if (!mounted) return null;
@@ -36,28 +41,8 @@ export default function QuoteCart() {
         setIsOpen(false);
     };
 
-    if (items.length === 0 && !isOpen) return null;
-
     return (
         <>
-            {/* Floating Button */}
-            <button
-                onClick={() => setIsOpen(true)}
-                className="fixed bottom-8 right-8 z-[60] bg-brand-pink text-white p-4 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 group"
-            >
-                <div className="relative">
-                    <ShoppingBag size={28} />
-                    {totalItems > 0 && (
-                        <span className="absolute -top-2 -right-2 bg-black text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold border-2 border-brand-pink">
-                            {totalItems}
-                        </span>
-                    )}
-                </div>
-                <span className="absolute right-full mr-4 bg-black text-white px-3 py-1 rounded-lg text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap hidden md:block">
-                    Ver mi cotización
-                </span>
-            </button>
-
             {/* Overlay */}
             {isOpen && (
                 <div
@@ -98,7 +83,7 @@ export default function QuoteCart() {
                                 <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 bg-gray-50">
                                     {item.image && (
                                         <Image
-                                            src={urlFor(item.image).url()}
+                                            src={typeof item.image === 'string' ? item.image : urlFor(item.image).url()}
                                             alt={item.title}
                                             fill
                                             className="object-cover"
