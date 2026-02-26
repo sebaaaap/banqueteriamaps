@@ -56,35 +56,59 @@ async function getData() {
   }`;
 
   const configQuery = `*[_type == "configuracion"][0]`;
+  const marcasQuery = `*[_type == "marca"]{
+    nombre,
+    "logo": logo.asset->url
+  }`;
+  const heroQuery = `*[_type == "hero"][0]{
+    slides[]{
+      image,
+      title,
+      subtitle,
+      "linkTo": linkTo->_id
+    }
+  }`;
+  const nosotrosQuery = `*[_type == "nosotros"][0]`;
+
+  const categoriesQuery = `*[_type == "categoriaCoctel"]{
+    _id,
+    nombre,
+    imagen
+  }`;
 
   try {
-    const [products, events, config] = await Promise.all([
+    const [products, services, events, config, heroData, nosotrosData, categoriesData, marcasData] = await Promise.all([
       client.fetch<Producto[]>(productsQuery),
+      client.fetch<any[]>(`*[_type == "servicio"]`).catch(() => []),
       client.fetch<Evento[]>(eventsQuery).catch(() => []),
-      client.fetch<Configuracion>(configQuery).catch(() => ({ whatsapp: "56976324033", email: "banqueteriamaps@gmail.com", instagram: "" })),
+      client.fetch<any>(configQuery).catch(() => ({ whatsapp: "56976324033", email: "banqueteriamaps@gmail.com", instagram: "", horarios: [] })),
+      client.fetch<any>(heroQuery).catch(() => null),
+      client.fetch<any>(nosotrosQuery).catch(() => null),
+      client.fetch<any[]>(categoriesQuery).catch(() => []),
+      client.fetch<any[]>(marcasQuery).catch(() => [])
     ]);
-    return { products, events, config };
+    return { products, services, events, config, heroData, nosotrosData, categoriesData, marcasData };
   } catch (error) {
     console.error("Error fetching data:", error);
-    return { products: [], events: [], config: null };
+    return { products: [], services: [], events: [], config: null, heroData: null, nosotrosData: null, categoriesData: [], marcasData: [] };
   }
 }
 
 export default async function Home() {
-  const { products, events, config } = await getData();
+  const { products, services, events, config, heroData, nosotrosData, categoriesData, marcasData } = await getData();
   const whatsappNumber = config?.whatsapp?.replace(/\D/g, "") || "56976324033";
 
   return (
     <div className="flex flex-col min-h-screen">
       {config && <ConfigSetter whatsapp={config.whatsapp} />}
-      <HeroCarousel />
-      <AgendaSection />
+      <HeroCarousel slidesFromSanity={heroData?.slides} />
+      <AgendaSection categoriesFromSanity={categoriesData} />
       <FeaturedProducts products={products.slice(0, 4)} />
       <ProcessSection />
-      <ServicesGrid />
+      <ServicesGrid servicesFromSanity={services} />
 
-      <AboutSection />
-      <BrandsCarousel />
+      <AboutSection content={nosotrosData} />
+      <BrandsCarousel marcasFromSanity={marcasData} />
 
       <CTASection whatsappNumber={whatsappNumber} />
     </div>

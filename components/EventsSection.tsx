@@ -94,7 +94,11 @@ interface MediaItem {
 function EventItem({ evento, index }: { evento: Evento; index: number }) {
     // Combine and shuffle content for a rich masonry feel
     const combinedMedia: MediaItem[] = [];
-    const images = evento.galeriaFotos || [];
+    // Filter images to skip those without an asset (avoids Sanity URL resolution errors)
+    const images = (evento.galeriaFotos || []).filter(img => {
+        if (typeof img === 'string') return true;
+        return img && img.asset;
+    });
     const socialVideos = evento.videosRedes || [];
     const nativeVideos = evento.videosSubidos || [];
     const videos = [...socialVideos, ...nativeVideos];
@@ -107,7 +111,7 @@ function EventItem({ evento, index }: { evento: Evento; index: number }) {
     while (imgIdx < images.length || vidIdx < videos.length) {
         // Add a few images
         for (let k = 0; k < 3 && imgIdx < images.length; k++) {
-            combinedMedia.push({ type: 'image', url: images[imgIdx], id: `img-${imgIdx}` });
+            combinedMedia.push({ type: 'image', url: images[imgIdx] as any, id: `img-${imgIdx}` });
             imgIdx++;
         }
         // Add a video
@@ -169,10 +173,13 @@ function EventItem({ evento, index }: { evento: Evento; index: number }) {
                             {item.type === 'image' ? (
                                 <>
                                     <Image
-                                        src={typeof item.url === 'string' ? item.url : urlFor(item.url).width(800).url()}
+                                        src={
+                                            typeof item.url === 'string'
+                                                ? item.url
+                                                : (item.url && (item.url as any).asset ? urlFor(item.url).width(800).url() : '/b5.png')
+                                        }
                                         alt={evento.nombreEvento}
                                         fill
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                         className="object-cover group-hover:scale-105 transition-transform duration-1000"
                                     />
                                     <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />

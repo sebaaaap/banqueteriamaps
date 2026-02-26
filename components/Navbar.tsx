@@ -4,7 +4,14 @@ import { Phone, Instagram, ShoppingBag } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useQuoteStore } from '@/lib/quote-store';
 
-export default function Navbar() {
+interface NavbarProps {
+    config?: {
+        whatsapp?: string;
+        instagram?: string;
+    }
+}
+
+export default function Navbar({ config }: NavbarProps) {
     const [scrolled, setScrolled] = useState(false);
 
     const { items } = useQuoteStore();
@@ -21,6 +28,10 @@ export default function Navbar() {
 
     const totalItems = mounted ? items.reduce((acc, item) => acc + item.quantity, 0) : 0;
     const textColor = scrolled ? 'text-brand-black' : 'text-white';
+
+    // Clean numbers for links
+    const whatsappClean = config?.whatsapp?.replace(/\D/g, "") || "56976324033";
+    const instagramUrl = config?.instagram || "https://instagram.com/banqueteriamaps";
 
     const openDrawer = () => {
         window.dispatchEvent(new CustomEvent('open-quote-drawer'));
@@ -54,10 +65,10 @@ export default function Navbar() {
                         )}
                     </button>
 
-                    <a href="tel:+56976324033" className={`hover:scale-110 transition-all duration-300 ${scrolled ? 'text-brand-pink' : 'text-white hover:text-brand-pink'}`}>
+                    <a href={`https://wa.me/${whatsappClean}`} className={`hover:scale-110 transition-all duration-300 ${scrolled ? 'text-brand-pink' : 'text-white hover:text-brand-pink'}`}>
                         <Phone size={20} />
                     </a>
-                    <a href="https://instagram.com/banqueteriamaps" target="_blank" rel="noopener noreferrer" className={`hover:scale-110 transition-all duration-300 ${scrolled ? 'text-brand-pink' : 'text-white hover:text-brand-pink'}`}>
+                    <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className={`hover:scale-110 transition-all duration-300 ${scrolled ? 'text-brand-pink' : 'text-white hover:text-brand-pink'}`}>
                         <Instagram size={20} />
                     </a>
                 </div>

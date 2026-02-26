@@ -4,6 +4,11 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import QuoteCart from "@/components/QuoteCart";
+import { client } from "@/lib/sanity";
+
+async function getConfig() {
+  return await client.fetch(`*[_type == "configuracion"][0]`).catch(() => null);
+}
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -22,20 +27,22 @@ export const metadata: Metadata = {
   description: "Banquetería y Coctelería de lujo en Chile. Eventos, Matrimonios, Coffee Breaks.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const config = await getConfig();
+
   return (
     <html lang="es" className={`${playfair.variable} ${inter.variable}`}>
       <body className="antialiased bg-brand-cream text-brand-black font-sans min-h-screen flex flex-col">
-        <Navbar />
+        <Navbar config={config} />
         <main className="flex-grow pt-0">
           {children}
         </main>
         <QuoteCart />
-        <Footer />
+        <Footer config={config} />
       </body>
     </html>
   );

@@ -17,7 +17,22 @@ const TikTokIcon = ({ size = 20, className = "" }: { size?: number, className?: 
     </svg>
 );
 
-export default function Footer() {
+interface FooterProps {
+    config?: {
+        whatsapp?: string;
+        email?: string;
+        instagram?: string;
+        facebook?: string;
+        tiktok?: string;
+        horarios?: string[];
+    };
+}
+
+export default function Footer({ config }: FooterProps) {
+    const defaultHours = ["9am a 20pm"];
+    const hours = config?.horarios?.length ? config.horarios : defaultHours;
+    const whatsappClean = config?.whatsapp?.replace(/\D/g, "") || "56976324033";
+
     return (
         <footer className="bg-brand-black py-20 border-t border-white/5 text-white">
             <div className="container mx-auto px-6 grid md:grid-cols-4 gap-12">
@@ -33,15 +48,21 @@ export default function Footer() {
 
                     {/* Social Media Icons */}
                     <div className="flex space-x-3 pt-2">
-                        <a href="#" aria-label="Instagram" className="p-3 rounded-full bg-white/5 hover:bg-brand-gold hover:text-brand-black transition-all duration-300 group">
-                            <Instagram size={20} className="text-gray-300 group-hover:text-brand-black" />
-                        </a>
-                        <a href="#" aria-label="Facebook" className="p-3 rounded-full bg-white/5 hover:bg-brand-gold hover:text-brand-black transition-all duration-300 group">
-                            <Facebook size={20} className="text-gray-300 group-hover:text-brand-black" />
-                        </a>
-                        <a href="#" aria-label="TikTok" className="p-3 rounded-full bg-white/5 hover:bg-brand-gold hover:text-brand-black transition-all duration-300 group">
-                            <TikTokIcon size={20} className="text-gray-300 group-hover:text-brand-black" />
-                        </a>
+                        {config?.instagram && (
+                            <a href={config.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="p-3 rounded-full bg-white/5 hover:bg-brand-gold hover:text-brand-black transition-all duration-300 group">
+                                <Instagram size={20} className="text-gray-300 group-hover:text-brand-black" />
+                            </a>
+                        )}
+                        {config?.facebook && (
+                            <a href={config.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="p-3 rounded-full bg-white/5 hover:bg-brand-gold hover:text-brand-black transition-all duration-300 group">
+                                <Facebook size={20} className="text-gray-300 group-hover:text-brand-black" />
+                            </a>
+                        )}
+                        {config?.tiktok && (
+                            <a href={config.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="p-3 rounded-full bg-white/5 hover:bg-brand-gold hover:text-brand-black transition-all duration-300 group">
+                                <TikTokIcon size={20} className="text-gray-300 group-hover:text-brand-black" />
+                            </a>
+                        )}
                     </div>
                 </div>
 
@@ -49,10 +70,10 @@ export default function Footer() {
                 <div>
                     <h4 className="font-serif font-bold mb-6 uppercase tracking-[0.2em] text-sm text-brand-gold">Enlaces</h4>
                     <ul className="space-y-4 text-gray-400 font-light text-sm">
-                        <li><a href="#servicios" className="hover:text-brand-gold transition-colors">Nuestros Servicios</a></li>
-                        <li><a href="#eventos" className="hover:text-brand-gold transition-colors">Galería de Eventos</a></li>
-                        <li><a href="#contacto" className="hover:text-brand-gold transition-colors">Solicitar Cotización</a></li>
-                        <li><a href="#" className="hover:text-brand-gold transition-colors">Preguntas Frecuentes</a></li>
+                        <li><a href="/#servicios" className="hover:text-brand-gold transition-colors">Nuestros Servicios</a></li>
+                        <li><a href="/eventos" className="hover:text-brand-gold transition-colors">Galería de Eventos</a></li>
+                        <li><a href="/productos" className="hover:text-brand-gold transition-colors">Catálogo de Productos</a></li>
+                        <li><a href="/servicios" className="hover:text-brand-gold transition-colors">Servicios Detallados</a></li>
                     </ul>
                 </div>
 
@@ -60,25 +81,29 @@ export default function Footer() {
                 <div>
                     <h4 className="font-serif font-bold mb-6 uppercase tracking-[0.2em] text-sm text-brand-gold">Contacto</h4>
                     <div className="space-y-4">
-                        <a href="mailto:banqueteriamaps@gmail.com" className="flex items-center gap-4 group">
+                        <a href={`mailto:${config?.email || 'banqueteriamaps@gmail.com'}`} className="flex items-center gap-4 group">
                             <div className="p-2 rounded-full bg-white/5 group-hover:bg-brand-gold transition-colors">
                                 <Mail size={18} className="text-gray-300 group-hover:text-brand-black" />
                             </div>
-                            <span className="text-gray-400 group-hover:text-white transition-colors text-sm">banqueteriamaps@gmail.com</span>
+                            <span className="text-gray-400 group-hover:text-white transition-colors text-sm">{config?.email || 'banqueteriamaps@gmail.com'}</span>
                         </a>
 
-                        <a href="tel:+56976324033" className="flex items-center gap-4 group">
+                        <a href={`https://wa.me/${whatsappClean}`} className="flex items-center gap-4 group">
                             <div className="p-2 rounded-full bg-white/5 group-hover:bg-brand-gold transition-colors">
                                 <Phone size={18} className="text-gray-300 group-hover:text-brand-black" />
                             </div>
-                            <span className="text-gray-400 group-hover:text-white transition-colors text-sm">+56 9 7632 4033</span>
+                            <span className="text-gray-400 group-hover:text-white transition-colors text-sm">{config?.whatsapp || '+56 9 7632 4033'}</span>
                         </a>
 
-                        <div className="flex items-center gap-4 pt-2">
-                            <div className="p-2 rounded-full bg-white/5">
-                                <span className="text-brand-gold text-xs font-bold font-serif">H</span>
-                            </div>
-                            <span className="text-gray-400 text-sm">9am a 20pm</span>
+                        <div className="flex flex-col gap-2 pt-2">
+                            {hours.map((line, idx) => (
+                                <div key={idx} className="flex items-center gap-4">
+                                    <div className="p-2 rounded-full bg-white/5">
+                                        <span className="text-brand-gold text-xs font-bold font-serif">H</span>
+                                    </div>
+                                    <span className="text-gray-400 text-sm">{line}</span>
+                                </div>
+                            ))}
                         </div>
 
                         <div className="mt-8 pt-6 border-t border-white/5">

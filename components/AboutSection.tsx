@@ -1,8 +1,18 @@
 import Image from "next/image";
+import { urlFor } from "@/lib/sanity";
 
-export default function AboutSection() {
+interface AboutSectionProps {
+    content?: {
+        imagenHistoria?: any;
+    };
+}
+
+export default function AboutSection({ content }: AboutSectionProps) {
+    const backgroundImage = "https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?q=80&w=800&auto=format&fit=crop";
+    const historyImage = content?.imagenHistoria ? urlFor(content.imagenHistoria).url() : "/nosotros.png";
+
     return (
-        <section id="sobre-nosotros" className="relative py-32 bg-fixed bg-center bg-cover" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?q=80&w=800&auto=format&fit=crop')" }}>
+        <section id="sobre-nosotros" className="relative py-32 bg-fixed bg-center bg-cover" style={{ backgroundImage: `url('${backgroundImage}')` }}>
             {/* Dark Overlay */}
             <div className="absolute inset-0 bg-black/60"></div>
 
@@ -10,7 +20,7 @@ export default function AboutSection() {
                 <div className="max-w-5xl mx-auto flex justify-center">
                     <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-brand-gold/30">
                         <Image
-                            src="/nosotros.png"
+                            src={historyImage}
                             alt="Sobre Nosotros - Banquetería MAPS"
                             width={1200}
                             height={800}

@@ -83,7 +83,11 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                             <div className="relative h-64 overflow-hidden">
                                 {product.imagenPrincipal && (
                                     <Image
-                                        src={typeof product.imagenPrincipal === 'string' ? product.imagenPrincipal : urlFor(product.imagenPrincipal).url()}
+                                        src={
+                                            typeof product.imagenPrincipal === 'string'
+                                                ? product.imagenPrincipal
+                                                : (product.imagenPrincipal?.asset ? urlFor(product.imagenPrincipal).url() : '/b5.png')
+                                        }
                                         alt={product.titulo}
                                         fill
                                         className="object-cover group-hover:scale-110 transition-transform duration-700"

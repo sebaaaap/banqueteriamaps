@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import { useQuoteStore } from "@/lib/quote-store";
-import { Plus, Check, ArrowRight, Search } from "lucide-react";
-import { useState } from "react";
+import { Plus, Check, Search } from "lucide-react";
+import { useState, useEffect } from "react";
 import { urlFor } from "@/lib/sanity";
+import { useSearchParams } from "next/navigation";
 
 interface Product {
     _id: string;
@@ -14,22 +15,36 @@ interface Product {
     categoria?: string;
 }
 
-interface ProductsGridProps {
-    products: Product[];
+interface Category {
+    _id: string;
+    nombre: string;
 }
 
-export default function ProductsGrid({ products }: ProductsGridProps) {
+interface ProductsGridProps {
+    products: Product[];
+    categoriesFromSanity?: Category[];
+}
+
+export default function ProductsGrid({ products, categoriesFromSanity = [] }: ProductsGridProps) {
+    const searchParams = useSearchParams();
     const addItem = useQuoteStore((state) => state.addItem);
     const [addedIds, setAddedIds] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("todas");
 
+    useEffect(() => {
+        const catId = searchParams.get("categoria");
+        if (catId) {
+            setSelectedCategory(catId);
+        }
+    }, [searchParams]);
+
     const categoriesList = [
         { id: "todas", label: "TODAS" },
-        { id: "salado", label: "CÓCTEL SALADO" },
-        { id: "dulce", label: "CÓCTEL DULCE" },
-        { id: "packs", label: "PACKS Y PROMOCIONES" },
-        { id: "tablas", label: "TABLAS DE PICOTEO" },
+        ...categoriesFromSanity.map(cat => ({
+            id: cat._id,
+            label: cat.nombre.toUpperCase()
+        }))
     ];
 
     const handleAdd = (product: any) => {
@@ -83,8 +98,8 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
                             key={cat.id}
                             onClick={() => setSelectedCategory(cat.id)}
                             className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 ${selectedCategory === cat.id
-                                    ? "bg-brand-black text-white shadow-lg"
-                                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                                ? "bg-brand-black text-white shadow-lg"
+                                : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                                 }`}
                         >
                             {cat.label}
@@ -94,7 +109,7 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
 
                 {filteredProducts.length === 0 ? (
                     <div className="text-center py-20 text-gray-500 font-light text-lg">
-                        No se encontraron productos que coincidan con tu búsqueda.
+                        No se encontraron productos en esta categoría o que coincidan con tu búsqueda.
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -103,7 +118,11 @@ export default function ProductsGrid({ products }: ProductsGridProps) {
                                 <div className="relative h-64 overflow-hidden">
                                     {product.imagenPrincipal ? (
                                         <Image
-                                            src={typeof product.imagenPrincipal === 'string' ? product.imagenPrincipal : urlFor(product.imagenPrincipal).url()}
+                                            src={
+                                                typeof product.imagenPrincipal === 'string'
+                                                    ? product.imagenPrincipal
+                                                    : (product.imagenPrincipal?.asset ? urlFor(product.imagenPrincipal).url() : '/b5.png')
+                                            }
                                             alt={product.titulo}
                                             fill
                                             className="object-cover group-hover:scale-110 transition-transform duration-700"

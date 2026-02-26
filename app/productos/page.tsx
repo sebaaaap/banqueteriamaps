@@ -1,6 +1,7 @@
 import ConfigSetter from "@/components/ConfigSetter";
 import ProductsGrid from "@/components/productos/ProductsGrid";
 import { client } from "@/lib/sanity";
+import { Suspense } from "react";
 
 interface Producto {
     _id: string;
@@ -24,25 +25,31 @@ async function getData() {
     titulo,
     descripcion,
     imagenPrincipal,
-    categoria
+    "categoria": categoria->_id
+  }`;
+
+    const categoriesQuery = `*[_type == "categoriaCoctel"] | order(nombre asc){
+    _id,
+    nombre
   }`;
 
     const configQuery = `*[_type == "configuracion"][0]`;
 
     try {
-        const [products, config] = await Promise.all([
+        const [products, categories, config] = await Promise.all([
             client.fetch<Producto[]>(productsQuery),
+            client.fetch<any[]>(categoriesQuery),
             client.fetch<Configuracion>(configQuery).catch(() => ({ whatsapp: "56976324033", email: "", instagram: "" })),
         ]);
-        return { products, config };
+        return { products, categories, config };
     } catch (error) {
         console.error("Error fetching data:", error);
-        return { products: [], config: null };
+        return { products: [], categories: [], config: null };
     }
 }
 
 export default async function ProductosPage() {
-    const { products, config } = await getData();
+    const { products, categories, config } = await getData();
 
     const dummyProducts = [
         {
@@ -94,7 +101,9 @@ export default async function ProductosPage() {
             </section>
 
             {/* Main Grid Component (Client-side) */}
-            <ProductsGrid products={displayProducts} />
+            <Suspense fallback={<div className="text-center py-20 text-brand-gray font-light">Cargando catálogo...</div>}>
+                <ProductsGrid products={displayProducts} categoriesFromSanity={categories} />
+            </Suspense>
         </div>
     );
 }

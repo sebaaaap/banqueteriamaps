@@ -2,37 +2,42 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { urlFor } from "@/lib/sanity";
+import Link from "next/link";
 
-const slides = [
-  {
-    image: "/p1.jpg",
-    title: "EXPERIENCIAS QUE DEJAN HUELLA",
-    subtitle: "Creamos momentos inolvidables a través de la alta gastronomía",
-  },
-  {
-    image: "/p2.jpg",
-    title: "COCTELERÍA DE VANGUARDIA",
-    subtitle: "Formatos creativos y sabores excepcionales para tus invitados",
-  },
-  {
-    image: "/p3.jpg",
-    title: "CALIDAD EN CADA DETALLE",
-    subtitle: "Productos frescos y procesos artesanales seleccionados",
-  },
-  {
-    image: "/p4.jpg",
-    title: "TU EVENTO, NUESTRA PASIÓN",
-    subtitle: "Dedicación y elegancia en cada detalle de tu celebración",
-  },
-];
+interface Slide {
+  image: any;
+  title: string;
+  subtitle: string;
+  linkTo?: string;
+}
 
-export default function HeroCarousel() {
+interface HeroCarouselProps {
+  slidesFromSanity?: Slide[];
+}
+
+export default function HeroCarousel({ slidesFromSanity = [] }: HeroCarouselProps) {
   const [current, setCurrent] = useState(0);
+
+  const slides = slidesFromSanity.length > 0
+    ? slidesFromSanity
+    : [
+      {
+        image: "/p1.jpg",
+        title: "EXPERIENCIAS QUE DEJAN HUELLA",
+        subtitle: "Creamos momentos inolvidables a través de la alta gastronomía",
+      },
+      {
+        image: "/p2.jpg",
+        title: "COCTELERÍA DE VANGUARDIA",
+        subtitle: "Formatos creativos y sabores excepcionales para tus invitados",
+      }
+    ];
 
   const next = useCallback(() => {
     setCurrent((curr) => (curr === slides.length - 1 ? 0 : curr + 1));
-  }, []);
+  }, [slides.length]);
 
   const prev = () => {
     setCurrent((curr) => (curr === 0 ? slides.length - 1 : curr - 1));
@@ -53,7 +58,7 @@ export default function HeroCarousel() {
         >
           <div className="absolute inset-0 bg-black/30 z-10" />
           <Image
-            src={slide.image}
+            src={typeof slide.image === 'string' ? slide.image : urlFor(slide.image).url()}
             alt={slide.title}
             fill
             className={`object-cover transition-transform duration-[10000ms] ease-linear ${index === current ? "scale-110" : "scale-100"}`}
@@ -63,9 +68,18 @@ export default function HeroCarousel() {
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold tracking-widest mb-4 max-w-5xl uppercase drop-shadow-2xl">
               {slide.title}
             </h1>
-            <p className="text-base md:text-xl lg:text-2xl font-light italic max-w-3xl opacity-90 drop-shadow-lg font-serif">
+            <p className="text-base md:text-xl lg:text-2xl font-light italic max-w-3xl opacity-90 drop-shadow-lg font-serif mb-8">
               {slide.subtitle}
             </p>
+            {slide.linkTo && (
+              <Link
+                href={`/servicios#${slide.linkTo}`}
+                className="bg-brand-pink text-white px-10 py-4 rounded-full text-sm font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-brand-pink transition-all transform hover:scale-105 shadow-2xl flex items-center gap-2"
+              >
+                Ver Servicio
+                <ArrowRight size={18} />
+              </Link>
+            )}
           </div>
         </div>
       ))}
