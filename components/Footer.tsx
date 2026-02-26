@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import Image from 'next/image';
 import { Instagram, Phone, Mail, Facebook } from 'lucide-react';
 
 const TikTokIcon = ({ size = 20, className = "" }: { size?: number, className?: string }) => (
@@ -39,9 +41,19 @@ export default function Footer({ config }: FooterProps) {
 
                 {/* Brand Column */}
                 <div className="col-span-1 md:col-span-2 space-y-6">
-                    <h3 className="font-serif text-3xl font-bold mb-4 text-white tracking-wider">
-                        MAPS <span className="text-brand-gold">Banquetería</span>
-                    </h3>
+                    <div className="flex items-center space-x-4 mb-6">
+                        <div className="relative h-16 w-16">
+                            <Image
+                                src="/logo.png"
+                                alt="Banquetería Maps"
+                                fill
+                                className="object-contain brightness-0 invert"
+                            />
+                        </div>
+                        <h3 className="font-serif text-3xl font-bold text-white tracking-wider">
+                            Banquetería <span className="text-brand-gold">MAPS</span>
+                        </h3>
+                    </div>
                     <p className="text-gray-400 max-w-sm font-light leading-relaxed">
                         Creando momentos inolvidables a través de la alta gastronomía y un diseño excepcional. Tu evento, nuestra pasión.
                     </p>
