@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { client } from "@/lib/sanity";
+export const revalidate = 60;
 import ConfigSetter from "@/components/ConfigSetter";
 import EventsSection from "@/components/EventsSection";
 import CTASection from "@/components/CTASection";

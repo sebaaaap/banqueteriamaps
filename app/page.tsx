@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+export const revalidate = 60;
 import { client, urlFor } from "@/lib/sanity";
 import { Download, MessageSquare } from "lucide-react";
 import HeroCarousel from "@/components/HeroCarousel";

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+export const revalidate = 60;
 import ConfigSetter from "@/components/ConfigSetter";
 import { client } from "@/lib/sanity";
 import ServicesList from "@/components/ServicesList";
