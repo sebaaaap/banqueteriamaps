@@ -19,9 +19,13 @@ interface Evento {
 
 interface EventsSectionProps {
     eventos: Evento[];
+    config?: {
+        imagenFondoEventos?: any;
+    };
 }
 
-export default function EventsSection({ eventos }: EventsSectionProps) {
+export default function EventsSection({ eventos, config }: EventsSectionProps) {
+    const backgroundImage = config?.imagenFondoEventos ? urlFor(config.imagenFondoEventos).url() : "/p2.jpg";
     // Mock data for testing when Sanity is empty
     const displayEvents = eventos && eventos.length > 0 ? eventos : [
         {
@@ -48,7 +52,7 @@ export default function EventsSection({ eventos }: EventsSectionProps) {
         <section
             id="eventos"
             className="relative py-32 px-6 scroll-mt-24 overflow-hidden bg-fixed bg-center bg-cover"
-            style={{ backgroundImage: "url('/p2.jpg')" }}
+            style={{ backgroundImage: `url('${backgroundImage}')` }}
         >
             <div className="absolute inset-0 bg-black/70 pointer-events-none" />
 

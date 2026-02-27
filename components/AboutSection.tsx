@@ -2,13 +2,11 @@ import Image from "next/image";
 import { urlFor } from "@/lib/sanity";
 
 interface AboutSectionProps {
-    content?: {
-        imagenHistoria?: any;
-    };
+    content?: any;
 }
-
 export default function AboutSection({ content }: AboutSectionProps) {
-    const backgroundImage = "https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?q=80&w=800&auto=format&fit=crop";
+    const defaultBg = "https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?q=80&w=800&auto=format&fit=crop";
+    const backgroundImage = content?.imagenFondoNosotros ? urlFor(content.imagenFondoNosotros).url() : defaultBg;
     const historyImage = content?.imagenHistoria ? urlFor(content.imagenHistoria).url() : "/nosotros.png";
 
     return (
