@@ -2,6 +2,12 @@ import { revalidatePath } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 import { parseBody } from "next-sanity/webhook";
 
+export const dynamic = 'force-dynamic';
+
+export async function GET() {
+    return new NextResponse("El endpoint de revalidación está activo. Usa POST para revalidar.", { status: 200 });
+}
+
 export async function POST(req: NextRequest) {
     try {
         const { body, isValidSignature } = await parseBody<{ _type: string }>(
@@ -17,10 +23,10 @@ export async function POST(req: NextRequest) {
             return new NextResponse("Bad Request", { status: 400 });
         }
 
-        // Revalidad las rutas principales cuando algo cambia en Sanity
+        // Revalidar TODO el sitio (layout) y las páginas específicas
         console.log(`Revalidando por cambio en: ${body._type}`);
 
-        revalidatePath("/");
+        revalidatePath("/", "layout");
         revalidatePath("/servicios");
         revalidatePath("/eventos");
 
