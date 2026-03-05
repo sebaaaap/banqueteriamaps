@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import QuoteCart from "@/components/QuoteCart";
+import WhatsappButton from "@/components/WhatsappButton";
 import { client } from "@/lib/sanity";
 
 async function getConfig() {
@@ -43,6 +44,7 @@ export default async function RootLayout({
         </main>
         <QuoteCart />
         <Footer config={config} />
+        <WhatsappButton whatsapp={config?.whatsapp} />
       </body>
     </html>
   );
