@@ -11,6 +11,7 @@ import ProcessSection from "@/components/ProcessSection";
 import ServicesGrid from "@/components/ServicesGrid";
 import BrandsCarousel from "@/components/BrandsCarousel";
 import AboutSection from "@/components/AboutSection";
+import GoogleReviews from "@/components/GoogleReviews";
 import CTASection from "@/components/CTASection";
 
 // Interfaces
@@ -110,6 +111,7 @@ export default async function Home() {
 
       <AboutSection content={nosotrosData} />
       <BrandsCarousel marcasFromSanity={marcasData} />
+      <GoogleReviews />
 
       <CTASection whatsappNumber={whatsappNumber} />
     </div>
