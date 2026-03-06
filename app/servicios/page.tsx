@@ -4,6 +4,17 @@ export const revalidate = 60;
 import ConfigSetter from "@/components/ConfigSetter";
 import { client } from "@/lib/sanity";
 import ServicesList from "@/components/ServicesList";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Nuestros Servicios",
+    description: "Conoce los servicios completos de Banquetería MAPS. Ofrecemos catering para matrimonios, eventos corporativos, coffee breaks y celebraciones exclusivas en Chile.",
+    openGraph: {
+        title: "Servicios de Banquetería Premium | MAPS",
+        description: "Gastronomía de excelencia para cada ocasión. Menús personalizados y atención de primer nivel.",
+        url: "/servicios",
+    }
+};
 
 interface Configuracion {
     whatsapp: string;

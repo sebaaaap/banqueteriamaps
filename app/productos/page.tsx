@@ -2,6 +2,18 @@ import ConfigSetter from "@/components/ConfigSetter";
 import ProductsGrid from "@/components/productos/ProductsGrid";
 import { client } from "@/lib/sanity";
 import { Suspense } from "react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Catálogo de Productos",
+    description: "Explora nuestro exclusivo catálogo de productos gourmet. Desde opciones saladas y dulces hasta tablas premium para hacer de tu evento en Chile un momento inolvidable.",
+    openGraph: {
+        title: "Catálogo de Productos | Banquetería MAPS",
+        description: "Descubre nuestra selección de bocados fríos, calientes y tablas premium.",
+        url: "/productos",
+        images: ["/b6.png"],
+    }
+};
 
 interface Producto {
     _id: string;

@@ -4,6 +4,18 @@ export const revalidate = 60;
 import ConfigSetter from "@/components/ConfigSetter";
 import EventsSection from "@/components/EventsSection";
 import CTASection from "@/components/CTASection";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Galería de Eventos",
+    description: "Inspírate con nuestra galería de eventos, matrimonios, y coffee breaks en Chile. Descubre cómo Banquetería MAPS puede hacer realidad la celebración de tus sueños.",
+    keywords: ["galería eventos", "matrimonios fotos", "banquetería corporativa", "eventos banquetería maps"],
+    openGraph: {
+        title: "Galería de Eventos | Banquetería MAPS",
+        description: "Revive los mejores momentos de nuestros eventos premium.",
+        url: "/eventos",
+    }
+};
 
 interface Evento {
     _id: string;
