@@ -64,8 +64,7 @@ export default function ProductModal({ product, isOpen, onClose, onAdd, isAdded 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 pb-20 sm:pb-6">
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
-            <div className="relative bg-white w-full max-w-4xl max-h-[90vh] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row animate-in fade-in zoom-in duration-300">
-
+            <div className="relative bg-white w-full max-w-4xl max-h-[85vh] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row animate-in fade-in zoom-in duration-300">
                 {/* Close Button */}
                 <button
                     onClick={onClose}
@@ -75,7 +74,7 @@ export default function ProductModal({ product, isOpen, onClose, onAdd, isAdded 
                 </button>
 
                 {/* Left Side: Image Gallery */}
-                <div className="w-full md:w-1/2 relative h-[40vh] md:h-auto bg-gray-100 flex items-center justify-center">
+                <div className="w-full md:w-1/2 relative h-[35vh] md:h-auto min-h-[200px] shrink-0 bg-gray-100 flex items-center justify-center">
                     <Image
                         src={images[currentImageIndex]}
                         alt={`${product.titulo} - ${currentImageIndex + 1}`}
@@ -106,7 +105,7 @@ export default function ProductModal({ product, isOpen, onClose, onAdd, isAdded 
                                     <button
                                         key={idx}
                                         onClick={() => setCurrentImageIndex(idx)}
-                                        className={`w-2.5 h-2.5 rounded-full transition-all shadow-md ${idx === currentImageIndex ? 'bg-brand-pink w-6' : 'bg-white/80'
+                                        className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all shadow-md ${idx === currentImageIndex ? 'bg-brand-pink w-5 sm:w-6' : 'bg-white/80'
                                             }`}
                                     />
                                 ))}
@@ -116,45 +115,49 @@ export default function ProductModal({ product, isOpen, onClose, onAdd, isAdded 
                 </div>
 
                 {/* Right Side: Details */}
-                <div className="w-full md:w-1/2 p-6 sm:p-10 flex flex-col justify-between overflow-y-auto">
-                    <div>
-                        <h3 className="text-3xl md:text-4xl font-serif font-bold text-brand-black mb-4">
+                <div className="w-full md:w-1/2 flex flex-col min-h-0 bg-white">
+                    {/* Scrollable description */}
+                    <div className="p-6 md:p-8 overflow-y-auto flex-1">
+                        <h3 className="text-2xl md:text-4xl font-serif font-bold text-brand-black mb-3">
                             {product.titulo}
                         </h3>
-                        <div className="w-12 h-1 bg-brand-pink mb-6"></div>
-                        <p className="text-lg text-brand-gray font-light leading-relaxed mb-8">
+                        <div className="w-10 md:w-12 h-1 bg-brand-pink mb-4"></div>
+                        <p className="text-sm md:text-lg text-brand-gray font-light leading-relaxed">
                             {product.descripcion || "Sin descripción disponible."}
                         </p>
                     </div>
 
-                    <div className="mt-auto pt-6 border-t border-gray-100 flex flex-col gap-6">
-                        {product.precio && (
-                            <div className="flex items-end gap-2">
-                                <span className="text-gray-500 font-light text-sm uppercase translate-y-[-4px]">Valor:</span>
-                                <span className="text-3xl font-bold text-brand-black">
-                                    ${product.precio.toLocaleString('es-CL')}
-                                </span>
-                            </div>
-                        )}
-                        <button
-                            onClick={() => onAdd(product)}
-                            className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold transition-all duration-300 transform active:scale-95 shadow-lg ${isAdded
+                    {/* Fixed Footer */}
+                    <div className="p-6 md:p-8 pt-4 border-t border-gray-100 bg-white shrink-0 mt-auto">
+                        <div className="flex flex-col gap-4">
+                            {product.precio && (
+                                <div className="flex items-center gap-2">
+                                    <span className="text-gray-400 font-light text-[10px] md:text-xs uppercase px-1 tracking-widest mt-1">Valor:</span>
+                                    <span className="text-2xl md:text-3xl font-bold text-brand-black">
+                                        ${product.precio.toLocaleString('es-CL')}
+                                    </span>
+                                </div>
+                            )}
+                            <button
+                                onClick={() => onAdd(product)}
+                                className={`w-full flex items-center justify-center gap-2 py-3 md:py-4 rounded-xl md:rounded-2xl font-bold transition-all duration-300 transform active:scale-95 shadow-lg ${isAdded
                                     ? "bg-green-500 text-white"
                                     : "bg-brand-black text-white hover:bg-brand-pink"
-                                }`}
-                        >
-                            {isAdded ? (
-                                <>
-                                    <Check size={20} />
-                                    Añadido a Cotización
-                                </>
-                            ) : (
-                                <>
-                                    <Plus size={20} />
-                                    Añadir a Cotización
-                                </>
-                            )}
-                        </button>
+                                    }`}
+                            >
+                                {isAdded ? (
+                                    <>
+                                        <Check size={18} />
+                                        Añadido
+                                    </>
+                                ) : (
+                                    <>
+                                        <Plus size={18} />
+                                        Añadir a Cotización
+                                    </>
+                                )}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
