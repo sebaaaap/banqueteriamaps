@@ -20,6 +20,8 @@ interface Producto {
   titulo: string;
   descripcion: string;
   imagenPrincipal: any;
+  precio?: number;
+  galeria?: string[];
 }
 
 interface Evento {
@@ -44,7 +46,9 @@ async function getData() {
     _id,
     titulo,
     descripcion,
-    imagenPrincipal
+    imagenPrincipal,
+    precio,
+    "galeria": galeria[].asset->url
   }`;
 
   const eventsQuery = `*[_type == "evento"] | order(fecha desc) {

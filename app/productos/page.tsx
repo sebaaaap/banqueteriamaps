@@ -21,6 +21,8 @@ interface Producto {
     descripcion: string;
     imagenPrincipal: any;
     categoria: string;
+    precio?: number;
+    galeria?: string[];
 }
 
 interface Configuracion {
@@ -37,6 +39,8 @@ async function getData() {
     titulo,
     descripcion,
     imagenPrincipal,
+    precio,
+    "galeria": galeria[].asset->url,
     "categoria": categoria->_id
   }`;
 

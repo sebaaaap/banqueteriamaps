@@ -5,12 +5,15 @@ import { useQuoteStore } from "@/lib/quote-store";
 import { MessageSquare, Plus, Check } from "lucide-react";
 import { useState } from "react";
 import { urlFor } from "@/lib/sanity";
+import ProductModal from "@/components/ProductModal";
 
 interface Product {
     _id: string;
     titulo: string;
     descripcion: string;
     imagenPrincipal: any;
+    precio?: number;
+    galeria?: string[];
 }
 
 interface FeaturedProductsProps {
@@ -20,8 +23,13 @@ interface FeaturedProductsProps {
 export default function FeaturedProducts({ products }: FeaturedProductsProps) {
     const addItem = useQuoteStore((state) => state.addItem);
     const [addedIds, setAddedIds] = useState<string[]>([]);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-    const handleAdd = (product: any) => {
+    const handleAdd = (product: any, e?: React.MouseEvent) => {
+        if (e) {
+            e.stopPropagation();
+        }
+
         addItem({
             id: product._id,
             title: product.titulo,
@@ -79,7 +87,16 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {displayProducts.map((product) => (
-                        <div key={product._id} className="group bg-brand-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 flex flex-col h-full hover:-translate-y-2">
+                        <div
+                            key={product._id}
+                            onClick={() => setSelectedProduct(product)}
+                            className="cursor-pointer group bg-brand-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 flex flex-col h-full hover:-translate-y-2 relative"
+                        >
+                            <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span className="bg-white text-black text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-xl">
+                                    Ver Más
+                                </span>
+                            </div>
                             <div className="relative h-64 overflow-hidden">
                                 {product.imagenPrincipal && (
                                     <Image
@@ -105,12 +122,22 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                                 <h3 className="text-xl font-serif font-bold mb-3 text-brand-black group-hover:text-brand-gold transition-colors h-14 flex items-center justify-center">
                                     {product.titulo}
                                 </h3>
-                                <p className="text-brand-gray text-sm mb-8 line-clamp-3 flex-grow font-light">
+                                <p className="text-brand-gray text-sm mb-6 line-clamp-3 flex-grow font-light">
                                     {product.descripcion}
                                 </p>
 
+                                {/* Precio Destacado */}
+                                {product.precio && (
+                                    <div className="mb-6">
+                                        <span className="block text-xs uppercase tracking-widest text-gray-400 mb-1">Precio</span>
+                                        <span className="text-2xl font-bold text-brand-pink">
+                                            ${product.precio.toLocaleString('es-CL')}
+                                        </span>
+                                    </div>
+                                )}
+
                                 <button
-                                    onClick={() => handleAdd(product)}
+                                    onClick={(e) => handleAdd(product, e)}
                                     className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold transition-all duration-300 transform active:scale-95 shadow-lg ${addedIds.includes(product._id)
                                         ? "bg-green-500 text-white translate-y-0"
                                         : "bg-brand-black text-white hover:bg-brand-pink hover:shadow-brand-pink/20"
@@ -133,6 +160,15 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                     ))}
                 </div>
             </div>
+
+            {/* Modal de Producto */}
+            <ProductModal
+                product={selectedProduct}
+                isOpen={!!selectedProduct}
+                onClose={() => setSelectedProduct(null)}
+                onAdd={(p) => handleAdd(p)}
+                isAdded={selectedProduct ? addedIds.includes(selectedProduct._id) : false}
+            />
         </section>
     );
 }
