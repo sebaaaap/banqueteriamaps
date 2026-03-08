@@ -24,14 +24,21 @@ export default function QuoteDrawer() {
     if (!mounted) return null;
 
     const totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
+    const totalPrice = items.reduce((acc, item) => acc + (item.price ? item.price * item.quantity : 0), 0);
 
     const sendToWhatsApp = () => {
         const phoneNumber = whatsappNumber.replace(/\D/g, "");
         let message = "Hola Banquetería MAPS, me gustaría solicitar una cotización por los siguientes productos:\n\n";
 
         items.forEach((item, index) => {
-            message += `${index + 1}. ${item.title} (Cantidad: ${item.quantity})\n`;
+            const priceText = item.price ? ` ($${item.price.toLocaleString('es-CL')} c/u)` : '';
+            const totalText = item.price ? ` - Subtotal: $${(item.price * item.quantity).toLocaleString('es-CL')}` : '';
+            message += `${index + 1}. ${item.title} (Cantidad: ${item.quantity})${priceText}${totalText}\n`;
         });
+
+        if (totalPrice > 0) {
+            message += `\n*Total Estimado:* $${totalPrice.toLocaleString('es-CL')}\n`;
+        }
 
         message += "\nEspero su respuesta, gracias.";
 
@@ -92,9 +99,16 @@ export default function QuoteDrawer() {
                                 </div>
                                 <div className="flex-grow flex flex-col justify-between py-1">
                                     <div className="flex justify-between items-start">
-                                        <h3 className="font-serif font-bold text-brand-black leading-tight">
-                                            {item.title}
-                                        </h3>
+                                        <div className="flex flex-col">
+                                            <h3 className="font-serif font-bold text-brand-black leading-tight">
+                                                {item.title}
+                                            </h3>
+                                            {item.price && (
+                                                <span className="text-sm font-bold text-brand-pink mt-1">
+                                                    ${item.price.toLocaleString('es-CL')}
+                                                </span>
+                                            )}
+                                        </div>
                                         <button
                                             onClick={() => removeItem(item.id)}
                                             className="text-gray-300 hover:text-brand-pink transition-colors p-1"
@@ -131,10 +145,16 @@ export default function QuoteDrawer() {
                 {/* Footer */}
                 {items.length > 0 && (
                     <div className="p-8 border-t border-gray-100 bg-brand-cream space-y-4">
-                        <div className="flex justify-between items-center mb-4">
+                        <div className="flex justify-between items-center mb-2">
                             <span className="text-brand-gray font-light">Total de productos:</span>
                             <span className="font-bold text-brand-black">{totalItems}</span>
                         </div>
+                        {totalPrice > 0 && (
+                            <div className="flex justify-between items-center mb-4">
+                                <span className="text-brand-gray font-light">Monto Total Estimado:</span>
+                                <span className="font-bold text-2xl text-brand-pink">${totalPrice.toLocaleString('es-CL')}</span>
+                            </div>
+                        )}
                         <button
                             onClick={sendToWhatsApp}
                             className="w-full bg-brand-pink text-white py-5 rounded-2xl font-bold flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-brand-pink/20 uppercase tracking-widest text-sm"

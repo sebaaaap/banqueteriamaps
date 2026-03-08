@@ -60,6 +60,7 @@ export default function ProductsGrid({ products, categoriesFromSanity = [] }: Pr
             id: product._id,
             title: product.titulo,
             image: product.imagenPrincipal,
+            price: product.precio
         });
 
         setAddedIds((prev) => [...prev, product._id]);

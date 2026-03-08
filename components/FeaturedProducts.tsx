@@ -34,6 +34,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
             id: product._id,
             title: product.titulo,
             image: product.imagenPrincipal,
+            price: product.precio
         });
 
         setAddedIds((prev) => [...prev, product._id]);
