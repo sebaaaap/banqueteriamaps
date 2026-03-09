@@ -110,12 +110,12 @@ export default async function Home() {
       <HeroCarousel slidesFromSanity={heroData?.slides} />
       <AgendaSection categoriesFromSanity={categoriesData} />
       <FeaturedProducts products={products.slice(0, 4)} />
-      <ProcessSection />
       <ServicesGrid servicesFromSanity={services} />
 
       <AboutSection content={nosotrosData} />
+      <ProcessSection />
       <BrandsCarousel marcasFromSanity={marcasData} />
-      <GoogleReviews />
+      {/* <GoogleReviews /> */}
 
       <CTASection whatsappNumber={whatsappNumber} />
     </div>
