@@ -5,13 +5,23 @@ import { Suspense } from "react";
 import Image from "next/image";
 import type { Metadata } from "next";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
-    title: "Catálogo de Productos",
-    description: "Explora nuestro exclusivo catálogo de productos gourmet. Desde opciones saladas y dulces hasta tablas premium para hacer de tu evento en Chile un momento inolvidable.",
+    title: "Catálogo de Productos | Banquetería MAPS",
+    description: "Explora nuestro exclusivo catálogo gourmet: coctelería salada y dulce, tablas premium, coffee break y más. Catering de alto nivel para eventos en Chile.",
+    keywords: ["catálogo banquetería", "productos catering Chile", "bocados gourmet", "coctelería salada", "coffee break", "banquetería MAPS", "catering matrimonios"],
     openGraph: {
         title: "Catálogo de Productos | Banquetería MAPS",
-        description: "Descubre nuestra selección de bocados fríos, calientes y tablas premium.",
+        description: "Desde coctelería salada y dulce hasta tablas premium. Gastronomía de excelencia para tu evento.",
         url: "/productos",
+        images: ["/b6.png"],
+        type: "website",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Catálogo de Productos | Banquetería MAPS",
+        description: "Bocados gourmet, tablas premium y más. Catering de alto nivel para tus eventos.",
         images: ["/b6.png"],
     }
 };
@@ -112,8 +122,29 @@ export default async function ProductosPage() {
 
     const displayProducts = products && products.length > 0 ? products : dummyProducts;
 
+    const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Catálogo de Productos - Banquetería MAPS",
+        "description": "Catálogo completo de productos de catering y banquetería",
+        "url": "https://banqueteriamaps.cl/productos",
+        "numberOfItems": displayProducts.length,
+        "itemListElement": displayProducts.slice(0, 10).map((p: any, idx: number) => ({
+            "@type": "ListItem",
+            "position": idx + 1,
+            "name": p.titulo,
+            "description": p.descripcion || "",
+        }))
+    };
+
     return (
         <div className="flex flex-col min-h-screen bg-brand-white">
+            {/* SEO Structured Data */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+            />
+
             {config && <ConfigSetter whatsapp={config.whatsapp} />}
 
             {/* Mini Hero Section */}
