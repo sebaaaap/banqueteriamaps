@@ -142,7 +142,7 @@ export default function ProductsGrid({ products, categoriesFromSanity = [] }: Pr
                             <input
                                 ref={inputRef}
                                 id="product-search"
-                                type="search"
+                                type="text"
                                 autoComplete="off"
                                 placeholder="Buscar productos..."
                                 aria-label="Buscar productos"
@@ -261,8 +261,8 @@ export default function ProductsGrid({ products, categoriesFromSanity = [] }: Pr
                             onClick={() => setSelectedCategory(cat.id)}
                             aria-pressed={selectedCategory === cat.id}
                             className={`px-4 md:px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap ${selectedCategory === cat.id
-                                    ? "bg-brand-black text-white shadow-lg scale-105"
-                                    : "bg-gray-100 text-gray-500 hover:bg-gray-200 active:scale-95"
+                                ? "bg-brand-black text-white shadow-lg scale-105"
+                                : "bg-gray-100 text-gray-500 hover:bg-gray-200 active:scale-95"
                                 }`}
                         >
                             {cat.label}
@@ -337,8 +337,8 @@ export default function ProductsGrid({ products, categoriesFromSanity = [] }: Pr
                                         onClick={(e) => handleAdd(product, e)}
                                         aria-label={`Agregar ${product.titulo} a la cotización`}
                                         className={`w-full flex items-center justify-center gap-1.5 py-3 md:py-4 rounded-xl md:rounded-2xl font-bold transition-all duration-300 transform active:scale-95 shadow-lg text-sm md:text-base ${addedIds.includes(product._id)
-                                                ? "bg-green-500 text-white"
-                                                : "bg-brand-black text-white hover:bg-brand-pink"
+                                            ? "bg-green-500 text-white"
+                                            : "bg-brand-black text-white hover:bg-brand-pink"
                                             }`}
                                     >
                                         {addedIds.includes(product._id) ? (
