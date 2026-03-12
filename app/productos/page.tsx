@@ -1,7 +1,8 @@
 import ConfigSetter from "@/components/ConfigSetter";
 import ProductsGrid from "@/components/productos/ProductsGrid";
-import { client } from "@/lib/sanity";
+import { client, urlFor } from "@/lib/sanity";
 import { Suspense } from "react";
+import Image from "next/image";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -51,21 +52,32 @@ async function getData() {
 
     const configQuery = `*[_type == "configuracion"][0]`;
 
+    const heroQuery = `*[_type == "paginaHero" && pagina == "productos"][0]{
+        titulo,
+        subtitulo,
+        imagen
+    }`;
+
     try {
-        const [products, categories, config] = await Promise.all([
+        const [products, categories, config, heroData] = await Promise.all([
             client.fetch<Producto[]>(productsQuery),
             client.fetch<any[]>(categoriesQuery),
             client.fetch<Configuracion>(configQuery).catch(() => ({ whatsapp: "56976324033", email: "", instagram: "" })),
+            client.fetch<any>(heroQuery).catch(() => null),
         ]);
-        return { products, categories, config };
+        return { products, categories, config, heroData };
     } catch (error) {
         console.error("Error fetching data:", error);
-        return { products: [], categories: [], config: null };
+        return { products: [], categories: [], config: null, heroData: null };
     }
 }
 
 export default async function ProductosPage() {
-    const { products, categories, config } = await getData();
+    const { products, categories, config, heroData } = await getData();
+
+    const heroTitle = heroData?.titulo || "Catálogo de Productos";
+    const heroSubtitulo = heroData?.subtitulo || null;
+    const heroImageUrl = heroData?.imagen ? urlFor(heroData.imagen).url() : null;
 
     const dummyProducts = [
         {
@@ -107,12 +119,25 @@ export default async function ProductosPage() {
             {/* Mini Hero Section */}
             <section className="relative h-[30vh] flex items-center justify-center overflow-hidden bg-brand-black pt-20">
                 <div className="absolute inset-0 bg-black/60 z-10" />
-                <div className="absolute inset-0 z-0 opacity-40" style={{ backgroundImage: "url('/b6.png')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                {heroImageUrl ? (
+                    <Image
+                        src={heroImageUrl}
+                        alt={heroTitle}
+                        fill
+                        className="object-cover opacity-50"
+                        priority
+                    />
+                ) : (
+                    <div className="absolute inset-0 z-0 opacity-40" style={{ backgroundImage: "url('/b6.png')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                )}
                 <div className="relative z-20 text-center px-4">
                     <h1 className="text-3xl md:text-5xl font-serif font-bold text-white mb-4 uppercase tracking-widest">
-                        Catálogo de Productos
+                        {heroTitle}
                     </h1>
                     <div className="w-16 h-1 bg-brand-pink mx-auto"></div>
+                    {heroSubtitulo && (
+                        <p className="text-gray-200 text-lg font-light mt-4 max-w-2xl mx-auto">{heroSubtitulo}</p>
+                    )}
                 </div>
             </section>
 

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 export const revalidate = 60;
 import ConfigSetter from "@/components/ConfigSetter";
-import { client } from "@/lib/sanity";
+import { client, urlFor } from "@/lib/sanity";
 import ServicesList from "@/components/ServicesList";
 import type { Metadata } from "next";
 
@@ -32,21 +32,34 @@ async function getData() {
         "pdfMenu": pdfMenu.asset->url
     }`;
 
+    const heroQuery = `*[_type == "paginaHero" && pagina == "servicios"][0]{
+        titulo,
+        subtitulo,
+        imagen
+    }`;
+
     try {
-        const [config, sanityServices] = await Promise.all([
+        const [config, sanityServices, heroData] = await Promise.all([
             client.fetch<Configuracion>(configQuery).catch(() => ({ whatsapp: "56976324033" })),
-            client.fetch<any[]>(servicesQuery).catch(() => [])
+            client.fetch<any[]>(servicesQuery).catch(() => []),
+            client.fetch<any>(heroQuery).catch(() => null),
         ]);
-        return { config, sanityServices };
+        return { config, sanityServices, heroData };
     } catch (error) {
         console.error("Error fetching data:", error);
-        return { config: { whatsapp: "56976324033" }, sanityServices: [] };
+        return { config: { whatsapp: "56976324033" }, sanityServices: [], heroData: null };
     }
 }
 
 export default async function ServiciosPage() {
-    const { config, sanityServices } = await getData();
+    const { config, sanityServices, heroData } = await getData();
     const whatsappNumber = config?.whatsapp?.replace(/\D/g, "") || "56976324033";
+
+    const heroTitle = heroData?.titulo || "Nuestros Servicios";
+    const heroSubtitulo = heroData?.subtitulo || "Gastronomía de excelencia para cada ocasión";
+    const heroImageUrl = heroData?.imagen
+        ? urlFor(heroData.imagen).url()
+        : "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2070&auto=format&fit=crop";
 
     const normalizedServices = sanityServices.map((service, index) => ({
         id: service._id || `servicio-${index}`,
@@ -65,8 +78,8 @@ export default async function ServiciosPage() {
             {/* Hero Section */}
             <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
                 <Image
-                    src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2070&auto=format&fit=crop"
-                    alt="Servicios de Banquetería"
+                    src={heroImageUrl}
+                    alt={heroTitle}
                     fill
                     className="object-cover"
                     priority
@@ -74,11 +87,11 @@ export default async function ServiciosPage() {
                 <div className="absolute inset-0 bg-black/60" />
                 <div className="relative z-10 text-center px-4">
                     <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-4 uppercase tracking-widest">
-                        Nuestros Servicios
+                        {heroTitle}
                     </h1>
                     <div className="w-24 h-1 bg-brand-pink mx-auto mb-6"></div>
                     <p className="text-xl text-gray-200 font-light max-w-2xl mx-auto">
-                        Gastronomía de excelencia para cada ocasión
+                        {heroSubtitulo}
                     </p>
                 </div>
             </section>
